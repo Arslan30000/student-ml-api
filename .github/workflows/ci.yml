@@ -23,7 +23,7 @@ jobs:
 
       - name: Unit Tests
         run: |
-          pytest
+          python -m pytest
 
       - name: Docker Build Validation
         run: |
