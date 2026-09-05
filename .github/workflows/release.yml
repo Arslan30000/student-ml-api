@@ -26,12 +26,14 @@ jobs:
           pip install -r requirements.txt
           python -m pytest
 
-      - name: Extract Version
-        id: extract_version
+      - name: Extract Version and Lowercase Owner
+        id: extract_vars
         run: |
-          # Derives 1.0.0 from v1.0.0 automatically
           VERSION=${GITHUB_REF#refs/tags/v}
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+          # Convert Github username to lowercase to satisfy Docker requirements
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "OWNER_LC=$OWNER_LC" >> $GITHUB_ENV
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -46,5 +48,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/student-ml-api:${{ env.VERSION }}
-            ghcr.io/${{ github.repository_owner }}/student-ml-api:latest
+            ghcr.io/${{ env.OWNER_LC }}/student-ml-api:${{ env.VERSION }}
+            ghcr.io/${{ env.OWNER_LC }}/student-ml-api:latest
