@@ -11,11 +11,16 @@ def get_version():
         with open("VERSION", "r") as f:
             return f.read().strip()
     except FileNotFoundError:
-        return "1.0.0"
+        return "1.1.0"
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy", "application": "student-ml-api", "version": get_version()}
+    return {
+        "status": "healthy",
+        "application": "student-ml-api",
+        "application_version": get_version(),
+        "model version": "model-1"
+    }
 
 @app.post("/predict")
 def predict(request: PredictRequest):
